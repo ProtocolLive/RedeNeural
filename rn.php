@@ -1,5 +1,5 @@
 <?php
-//2020.05.11.01
+//2020.05.11.02
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 ini_set('error_reporting', -1);
@@ -42,6 +42,9 @@ class RedeNeural{
     //Saidas
     for($i = 0; $i < $QtSaidas; $i++):
       $this->Rede[$this->IdSaida][$i]['Saida'] = 1;
+      for($k = 0; $k < $this->QtNeuronioOculta; $k++):
+        $this->Rede[$this->IdSaida][$i]['Pesos'][$k] = rand(-1000, 1000);
+      endfor;
     endfor;
   }
 
@@ -79,7 +82,7 @@ class RedeNeural{
 
   public function Calcula():array{
     foreach($this->Rede as $IdCamada => &$Camada):
-      if($IdCamada > 0 and $IdCamada < $this->IdSaida):
+      if($IdCamada > 0):
         foreach($Camada as &$Neuronio):
           $soma = 0;
           foreach($Neuronio['Pesos'] as $IdNeuronio => $Peso):
@@ -89,11 +92,6 @@ class RedeNeural{
             $soma = 0;
           endif;
           $Neuronio['Saida'] = $soma;
-        endforeach;
-      elseif($IdCamada == $this->IdSaida):
-        $anterior = $IdCamada - 1;
-        foreach($Camada as $IdNeuronio => &$Saida):
-          $Saida['Saida'] = $this->Rede[$anterior][$IdNeuronio]['Saida'] > 0? 1: 0;
         endforeach;
       endif;
     endforeach;

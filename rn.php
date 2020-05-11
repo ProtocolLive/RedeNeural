@@ -53,6 +53,10 @@ class RedeNeural{
     return true;
   }
 
+  public function Saida($Id):int{
+    return $this->Rede[$this->IdSaida][$Id]['Saida'];
+  }
+
   public function PesosSet(array $Rede):bool{
     foreach($Rede as $Id1 => $Camada):
       foreach($Camada as $Id2 => $Peso):

@@ -1,5 +1,5 @@
 <?php
-//2020.05.11.00
+//2020.05.11.01
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 ini_set('error_reporting', -1);
@@ -40,9 +40,8 @@ class RedeNeural{
       endfor;
     endfor;
     //Saidas
-    $Saida = $QtOcultas + 1;
     for($i = 0; $i < $QtSaidas; $i++):
-      $this->Rede[$Saida][$i]['Saida'] = 1;
+      $this->Rede[$this->IdSaida][$i]['Saida'] = 1;
     endfor;
   }
 

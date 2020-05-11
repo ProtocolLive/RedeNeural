@@ -80,7 +80,7 @@ class RedeNeural{
     return $return;
   }
 
-  public function Calcula():array{
+  public function Calcula():void{
     foreach($this->Rede as $IdCamada => &$Camada):
       if($IdCamada > 0):
         foreach($Camada as &$Neuronio):
@@ -95,11 +95,6 @@ class RedeNeural{
         endforeach;
       endif;
     endforeach;
-    $return = [];
-    foreach($this->Rede[$this->IdSaida] as &$Saida):
-      $return[] = $Saida['Saida'];
-    endforeach;
-    return $return;
   }
 
   public function RedeGet():array{

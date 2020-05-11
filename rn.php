@@ -1,8 +1,5 @@
 <?php
 //2020.05.11.02
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-ini_set('error_reporting', -1);
 
 class RedeNeural{
   private array $Rede = [];

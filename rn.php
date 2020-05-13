@@ -86,9 +86,6 @@ class RedeNeural{
           foreach($Neuronio['Pesos'] as $IdNeuronio => $Peso):
             $soma += $this->Rede[$IdCamada - 1][$IdNeuronio]['Saida'] * $Peso;
           endforeach;
-          if($soma < 0):
-            $soma = 0;
-          endif;
           $Neuronio['Saida'] = $soma;
         endforeach;
       endif;

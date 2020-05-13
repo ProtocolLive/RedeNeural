@@ -39,7 +39,12 @@ class RedeNeural{
     $CamadaSaida = $QtOcultas + 1;
     for($i = 0; $i < $QtSaidas; $i++):
       $this->Rede[$CamadaSaida][$i]['Saida'] = 1;
-      for($k = 0; $k < $this->QtNeuronioOculta; $k++):
+      if($this->QtOcultas == 0):
+        $qt = $this->QtEntradas;
+      else:
+        $qt = $this->QtNeuronioOculta;
+      endif;
+      for($k = 0; $k < $qt; $k++):
         $this->Rede[$CamadaSaida][$i]['Pesos'][$k] = rand(-1000, 1000);
       endfor;
     endfor;

@@ -25,14 +25,14 @@ class RedeNeural{
       for($j = 0; $j < $this->QtNeuronioOculta; $j++):
         $this->Rede[$i][$j]['Saida'] = 1;
         if($i == 1):
-          for($k = 0; $k < $QtEntradas; $k++):
-            $this->Rede[$i][$j]['Pesos'][$k] = rand(-1000, 1000);
-          endfor;
+          $qt = $QtEntradas;
         else:
-          for($k = 0; $k < $this->QtNeuronioOculta; $k++):
-            $this->Rede[$i][$j]['Pesos'][$k] = rand(-1000, 1000);
-          endfor;
+          $qt = $this->QtNeuronioOculta;
         endif;
+        for($k = 0; $k < $qt; $k++):
+          $this->Rede[$i][$j]['Pesos'][$k] = rand(-1000, 1000);
+          $this->Rede[$i][$j]['Erro'][$k] = 0;
+        endfor;
       endfor;
     endfor;
     //Saidas

@@ -30,8 +30,8 @@ class RedeNeural{
           $qt = $this->QtNeuronioOculta;
         endif;
         for($k = 0; $k < $qt; $k++):
-          $this->Rede[$i][$j]['Pesos'][$k] = rand(-1000, 1000);
-          $this->Rede[$i][$j]['Erro'][$k] = 0;
+          $this->Rede[$i]['Relacoes'][$j]['Pesos'][$k] = rand(-1000, 1000);
+          $this->Rede[$i]['Relacoes'][$j]['Erro'][$k] = 0;
         endfor;
       endfor;
     endfor;
@@ -45,8 +45,8 @@ class RedeNeural{
         $qt = $this->QtNeuronioOculta;
       endif;
       for($k = 0; $k < $qt; $k++):
-        $this->Rede[$CamadaSaida][$i][$k]['Peso'] = rand(-1000, 1000);
-        $this->Rede[$CamadaSaida][$i][$k]['Erro'] = 0;
+        $this->Rede[$CamadaSaida][$i]['Relacoes'][$k]['Peso'] = rand(-1000, 1000);
+        $this->Rede[$CamadaSaida][$i]['Relacoes'][$k]['Erro'] = 0;
       endfor;
     endfor;
     $this->CamadaSaida = &$this->Rede[$CamadaSaida];
@@ -89,10 +89,8 @@ class RedeNeural{
       if($IdCamada > 0):
         foreach($Camada as &$Neuronio):
           $soma = 0;
-          foreach($Neuronio as $IdNeuronio => $Peso):
-            if($IdNeuronio !== 'Saida'):
-              $soma += $this->Rede[$IdCamada - 1][$IdNeuronio]['Saida'] * $Peso['Peso'];
-            endif;
+          foreach($Neuronio['Relacoes'] as $IdNeuronio => $Peso):
+            $soma += $this->Rede[$IdCamada - 1][$IdNeuronio]['Saida'] * $Peso['Peso'];
           endforeach;
           $Neuronio['Saida'] = $soma;
         endforeach;

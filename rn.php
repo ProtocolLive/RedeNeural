@@ -105,7 +105,7 @@ class RedeNeural{
     for($i = $ultima; $i > 0; $i--):
       if($i == $ultima):
         foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
-          $Neuronio['Erro'] = $Esperado[$IdNeuronio] - $Neuronio['Saida'];
+          $Neuronio['Erros'][$IdNeuronio] = $Esperado[$IdNeuronio] - $Neuronio['Saida'];
         endforeach;
       else:
         $soma = 0;

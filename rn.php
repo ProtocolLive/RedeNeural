@@ -1,5 +1,5 @@
 <?php
-//2020.05.11.02
+//2020.05.14.03
 
 class RedeNeural{
   private array $Rede = [];
@@ -30,6 +30,7 @@ class RedeNeural{
           $qt = $this->QtNeuronioOculta;
         endif;
         for($k = 0; $k < $qt; $k++):
+          $this->Rede[$i][$j]['Erro'] = 0;
           $this->Rede[$i][$j]['Pesos'][$k] = rand(-1000, 1000);
           $this->Rede[$i][$j]['Erros'][$k] = 0;
         endfor;
@@ -107,7 +108,7 @@ class RedeNeural{
     for($i = $ultima; $i > 0; $i--):
       if($i == $ultima):
         foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
-          $Neuronio['Erros'] = $Esperado[$IdNeuronio] - $Neuronio['Saida'];
+          $Neuronio['Erro'] = $Esperado[$IdNeuronio] - $Neuronio['Saida'];
         endforeach;
       else:
         $soma = 0;

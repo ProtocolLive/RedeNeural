@@ -101,4 +101,27 @@ class RedeNeural{
   public function RedeGet():array{
     return $this->Rede;
   }
+
+  public function CalculaErros(array $Esperado):void{
+    $ultima = count($this->Rede) - 1;
+    for($i = $ultima; $i > 0; $i--):
+      if($i == $ultima):
+        foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
+          $Neuronio['Erros'] = $Esperado[$IdNeuronio] - $Neuronio['Saida'];
+        endforeach;
+      else:
+        $soma = 0;
+        foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
+          foreach($Neuronio['Pesos'] as &$Peso):
+            $soma += $Peso;
+          endforeach;
+        endforeach;
+        foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
+          foreach($Neuronio['Pesos'] as $IdPeso => &$Peso):
+            $this->Rede[$i][$IdNeuronio]['Erros'][$IdPeso] = $Peso / $soma;
+          endforeach;
+        endforeach;
+      endif;
+    endfor;
+  }
 }

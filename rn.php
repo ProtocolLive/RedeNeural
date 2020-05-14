@@ -1,5 +1,5 @@
 <?php
-//2020.05.14.03
+//2020.05.14.04
 
 class RedeNeural{
   private array $Rede = [];
@@ -99,8 +99,8 @@ class RedeNeural{
     endforeach;
   }
 
-  public function RedeGet():array{
-    return $this->Rede;
+  public function RedeShow():void{
+    var_dump($this->Rede);
   }
 
   public function CalculaErros(array $Esperado):void{

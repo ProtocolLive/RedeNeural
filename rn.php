@@ -1,5 +1,5 @@
 <?php
-//2020.05.14.06
+//2020.05.14.07
 
 class RedeNeural{
   private array $Rede = [];
@@ -176,7 +176,7 @@ class RedeNeural{
                   foreach($Neuronio['Pesos'] as $IdPeso => $Peso):?>
                       Ligação <?php print $IdPeso;?>:<br>
                       Peso: <?php print $Peso;?><br>
-                      Erro: <?php print $this->CamadaSaida[$IdNeuronio]['Erros'][$IdPeso];?><br><br><?php
+                      Erro: <?php print $Neuronio['Erros'][$IdPeso];?><br><br><?php
                   endforeach;?>
                 </td>
               </tr>

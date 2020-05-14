@@ -1,5 +1,5 @@
 <?php
-//2020.05.14.04
+//2020.05.14.05
 
 class RedeNeural{
   private array $Rede = [];
@@ -124,5 +124,69 @@ class RedeNeural{
         endforeach;
       endif;
     endfor;
+  }
+
+  public function DesenhaRede(){
+    $ultima = count($this->Rede) - 1;?>
+    <style>
+      table{
+        margin-left: auto;
+        margin-right: auto;
+      }
+      th,td{
+        border: solid #000 1px;
+        text-align:center;
+      }
+    </style>
+    <table style="width:50%">
+      <tr>
+        <th>Entradas</th>
+        <th colspan="<?php print $ultima - 1;?>">Ocultas</th>
+        <th>Saídas</th>
+      </tr>
+      <tr>  
+        <td><?php
+          foreach($this->Rede[0] as $Neuronio):?>
+            <table>
+              <tr><td>Saída: <?php print $Neuronio['Saida'];?></td></tr>
+            </table><br><?php
+          endforeach;?>
+        </td>
+        <td><?php
+          foreach($this->Rede as $IdCamada => $Camada): 
+            if($IdCamada > 0 and $IdCamada < $ultima):
+              foreach($Camada as $IdNeuronio => $Neuronio):?>
+                <table>
+                  <tr>
+                    <td>Saída: <?php print $Neuronio['Saida'];?><br><br><?php
+                    foreach($Neuronio['Pesos'] as $IdPeso => $Peso):?>
+                        Ligação <?php print $IdPeso;?>:<br>
+                        Peso: <?php print $Peso;?><br>
+                        Erro: <?php print $this->Rede[$IdCamada][$IdNeuronio]['Erros'][$IdPeso];?><br><br><?php
+                    endforeach;?>
+                  </tr>
+                </table><br><?php
+              endforeach;
+            endif;
+          endforeach;?>
+        </td>
+        <td><?php
+          foreach($this->CamadaSaida as $IdNeuronio => $Neuronio):?>
+            <table>
+              <tr>
+                <td>
+                  Saída: <?php print $Neuronio['Saida'];?><br><br><?php
+                  foreach($Neuronio['Pesos'] as $IdPeso => $Peso):?>
+                      Ligação <?php print $IdPeso;?>:<br>
+                      Peso: <?php print $Peso;?><br>
+                      Erro: <?php print $this->CamadaSaida[$IdNeuronio]['Erros'][$IdPeso];?><br><br><?php
+                  endforeach;?>
+                </td>
+              </tr>
+            </table><br><?php
+          endforeach;?>
+        </td>
+      </tr>
+    </table><?php
   }
 }

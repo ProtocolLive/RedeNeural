@@ -1,5 +1,5 @@
 <?php
-//2020.05.19.02
+//2020.05.19.03
 
 class RedeNeural{
   private array $Rede = [];
@@ -64,15 +64,6 @@ class RedeNeural{
     return $this->Rede[$this->IdCamadaSaida][$Neuronio]->Saida;
   }
 
-  public function PesosSet(array $Rede):bool{
-    foreach($Rede as $Id1 => $Camada):
-      foreach($Camada as $Id2 => $Peso):
-        $this->Rede[$Id1 + 1][$Id2]->Pesos = $Peso;
-      endforeach;
-    endforeach;
-    return true;
-  }
-
   public function PesosGet():array{
     $return = [];
     foreach($this->Rede as $Id1 => $Camada):
@@ -83,6 +74,15 @@ class RedeNeural{
       endforeach;
     endforeach;
     return $return;
+  }
+
+  public function PesosSet(array $Rede):bool{
+    foreach($Rede as $Id1 => $Camada):
+      foreach($Camada as $Id2 => $Peso):
+        $this->Rede[$Id1 + 1][$Id2]->Pesos = $Peso;
+      endforeach;
+    endforeach;
+    return true;
   }
 
   public function Calcula():bool{

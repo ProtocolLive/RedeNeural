@@ -1,5 +1,5 @@
 <?php
-//2020.05.19.01
+//2020.05.19.02
 
 class RedeNeural{
   private array $Rede = [];
@@ -60,8 +60,8 @@ class RedeNeural{
     endfor;
   }
 
-  public function Saida($Id):int{
-    return $this->Rede[$this->IdCamadaSaida][$Id]->Saida;
+  public function Saida($Neuronio):int{
+    return $this->Rede[$this->IdCamadaSaida][$Neuronio]->Saida;
   }
 
   public function PesosSet(array $Rede):bool{

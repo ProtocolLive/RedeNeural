@@ -1,5 +1,5 @@
 <?php
-//2020.05.19.07
+//2020.05.19.08
 
 class RedeNeural{
   private array $Rede = [];
@@ -9,6 +9,9 @@ class RedeNeural{
   private int $QtNeuronioOculta = 0;
   private int $QtSaidas = 0;
   private int $IdCamadaSaida;
+  private array $Ativacoes = [0 => 'Relu', 1=> 'ReluDx', 2=> 'Sigmoid'];
+  private int $AtivacaoOcultas = 0;
+  private int $AtivacaoSaida = 0;
 
   private function FactoryNeuronio(){
     return new class{
@@ -17,6 +20,26 @@ class RedeNeural{
       public array $Pesos;
       public array $Erros;
     };
+  }
+
+  private function Relu($N):int{
+    if($N < 0):
+      return 0;
+    else:
+      return $N;
+    endif;
+  }
+
+  private function ReluDx($N):int{
+    if($N < 0):
+      return 0;
+    else:
+      return 1;
+    endif;
+  }
+
+  private function Sigmoid($N):float{
+    return 1 / (1 + exp(-$N));
   }
 
   public function __construct(int $QtEntradas, int $QtOcultas, int $QtNeuronioOculta, int $QtSaidas){
@@ -60,6 +83,24 @@ class RedeNeural{
     endfor;
   }
 
+  public function AtivacaoOcultasGet():int{
+    return $this->AtivacaoOcultas;
+  }
+
+  public function AtivacaoOcultasSet(int $N):bool{
+    $this->AtivacaoOcultas = $N;
+    return true;
+  }
+
+  public function AtivacaoSaidaGet():int{
+    return $this->AtivacaoSaida;
+  }
+
+  public function AtivacaoSaidaSet(int $N):bool{
+    $this->AtivacaoSaida = $N;
+    return true;
+  }
+
   public function RedeShow():void{
     var_dump($this->Rede);
   }
@@ -96,6 +137,11 @@ class RedeNeural{
           foreach($Neuronio->Pesos as $IdNeuronio => $Peso):
             $Neuronio->Saida += $this->Rede[$IdCamada - 1][$IdNeuronio]->Saida * $Peso;
           endforeach;
+          if($IdCamada == $this->IdCamadaSaida):
+            $Neuronio->Saida = $this->Ativacoes[$this->AtivacaoSaida]();
+          else:
+            $Neuronio->Saida = $this->Ativacoes[$this->AtivacaoOcultas]();
+          endif;
         endforeach;
       endif;
     endforeach;

@@ -1,5 +1,5 @@
 <?php
-//2020.05.14.07
+//2020.05.19.00
 
 class RedeNeural{
   private array $Rede = [];
@@ -10,6 +10,15 @@ class RedeNeural{
   private int $QtSaidas = 0;
   private array $CamadaSaida;
 
+  private function FactoryNeuronio(){
+    return new class{
+      public int $Saida = 1;
+      public int $Erro = 0;
+      public array $Pesos;
+      public array $Erros;
+    };
+  }
+
   public function __construct(int $QtEntradas, int $QtOcultas, int $QtNeuronioOculta, int $QtSaidas){
     $this->QtEntradas = $QtEntradas;
     $this->QtOcultas = $QtOcultas;
@@ -17,50 +26,49 @@ class RedeNeural{
     $this->QtSaidas = $QtSaidas;
     //Entradas
     for($i = 0; $i < $this->QtEntradas; $i++):
-      $this->Rede[0][$i]['Saida'] = 1;
+      $this->Rede[0][$i] = $this->FactoryNeuronio();
     endfor;
     //Ocultas
     $count = $this->QtOcultas + 1;
     for($i = 1; $i < $count; $i++):
       for($j = 0; $j < $this->QtNeuronioOculta; $j++):
-        $this->Rede[$i][$j]['Saida'] = 1;
+        $this->Rede[$i][$j] = $this->FactoryNeuronio();
         if($i == 1):
           $qt = $QtEntradas;
         else:
           $qt = $this->QtNeuronioOculta;
         endif;
         for($k = 0; $k < $qt; $k++):
-          $this->Rede[$i][$j]['Erro'] = 0;
-          $this->Rede[$i][$j]['Pesos'][$k] = rand(-1000, 1000);
-          $this->Rede[$i][$j]['Erros'][$k] = 0;
+          $this->Rede[$i][$j]->Pesos[$k] = rand(-1000, 1000);
+          $this->Rede[$i][$j]->Erros[$k] = 0;
         endfor;
       endfor;
     endfor;
     //Saidas
     $CamadaSaida = $QtOcultas + 1;
     for($i = 0; $i < $QtSaidas; $i++):
-      $this->Rede[$CamadaSaida][$i]['Saida'] = 1;
+      $this->Rede[$CamadaSaida][$i] = $this->FactoryNeuronio();
       if($this->QtOcultas == 0):
         $qt = $this->QtEntradas;
       else:
         $qt = $this->QtNeuronioOculta;
       endif;
       for($k = 0; $k < $qt; $k++):
-        $this->Rede[$CamadaSaida][$i]['Pesos'][$k] = rand(-1000, 1000);
-        $this->Rede[$CamadaSaida][$i]['Erros'][$k] = 0;
+        $this->Rede[$CamadaSaida][$i]->Pesos[$k] = rand(-1000, 1000);
+        $this->Rede[$CamadaSaida][$i]->Erros[$k] = 0;
       endfor;
     endfor;
     $this->CamadaSaida = &$this->Rede[$CamadaSaida];
   }
 
   public function Saida($Id):int{
-    return $this->CamadaSaida[$Id]['Saida'];
+    return $this->CamadaSaida[$Id]->Saida;
   }
 
   public function PesosSet(array $Rede):bool{
     foreach($Rede as $Id1 => $Camada):
       foreach($Camada as $Id2 => $Peso):
-        $this->Rede[$Id1 + 1][$Id2]['Pesos'] = $Peso;
+        $this->Rede[$Id1 + 1][$Id2]->Pesos = $Peso;
       endforeach;
     endforeach;
     return true;
@@ -71,7 +79,7 @@ class RedeNeural{
     foreach($this->Rede as $Id1 => $Camada):
       foreach($Camada as $Id2 => $Peso):
         if($Id1 > 0 and $Id1 <= $this->QtOcultas):
-          $return[$Id1][$Id2] = $this->Rede[$Id1][$Id2]['Pesos'];
+          $return[$Id1][$Id2] = $this->Rede[$Id1][$Id2]->Pesos;
         endif;
       endforeach;
     endforeach;
@@ -80,16 +88,16 @@ class RedeNeural{
 
   public function Calcula():bool{
     foreach(func_get_args() as $id => $arg):
-      $this->Rede[0][$id]['Saida'] = $arg;
+      $this->Rede[0][$id]->Saida = $arg;
     endforeach;
     foreach($this->Rede as $IdCamada => &$Camada):
       if($IdCamada > 0):
         foreach($Camada as &$Neuronio):
           $soma = 0;
-          foreach($Neuronio['Pesos'] as $IdNeuronio => $Peso):
-            $soma += $this->Rede[$IdCamada - 1][$IdNeuronio]['Saida'] * $Peso;
+          foreach($Neuronio->Pesos as $IdNeuronio => $Peso):
+            $soma += $this->Rede[$IdCamada - 1][$IdNeuronio]->Saida * $Peso;
           endforeach;
-          $Neuronio['Saida'] = $soma;
+          $Neuronio->Saida = $soma;
         endforeach;
       endif;
     endforeach;
@@ -105,18 +113,18 @@ class RedeNeural{
     for($i = $ultima; $i > 0; $i--):
       if($i == $ultima):
         foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
-          $Neuronio['Erros'][$IdNeuronio] = $Esperado[$IdNeuronio] - $Neuronio['Saida'];
+          $Neuronio->Erros[$IdNeuronio] = $Esperado[$IdNeuronio] - $Neuronio->Saida;
         endforeach;
       else:
         $soma = 0;
         foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
-          foreach($Neuronio['Pesos'] as &$Peso):
+          foreach($Neuronio->Pesos as &$Peso):
             $soma += $Peso;
           endforeach;
         endforeach;
         foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
-          foreach($Neuronio['Pesos'] as $IdPeso => &$Peso):
-            $this->Rede[$i][$IdNeuronio]['Erros'][$IdPeso] = $Peso / $soma;
+          foreach($Neuronio->Pesos as $IdPeso => &$Peso):
+            $this->Rede[$i][$IdNeuronio]->Erros[$IdPeso] = $Peso / $soma;
           endforeach;
         endforeach;
       endif;
@@ -145,7 +153,7 @@ class RedeNeural{
         <td><?php
           foreach($this->Rede[0] as $Neuronio):?>
             <table>
-              <tr><td>Saída: <?php print $Neuronio['Saida'];?></td></tr>
+              <tr><td>Saída: <?php print $Neuronio->Saida;?></td></tr>
             </table><br><?php
           endforeach;?>
         </td>
@@ -155,11 +163,11 @@ class RedeNeural{
               foreach($Camada as $IdNeuronio => $Neuronio):?>
                 <table>
                   <tr>
-                    <td>Saída: <?php print $Neuronio['Saida'];?><br><br><?php
-                    foreach($Neuronio['Pesos'] as $IdPeso => $Peso):?>
+                    <td>Saída: <?php print $Neuronio->Saida;?><br><br><?php
+                    foreach($Neuronio->Pesos as $IdPeso => $Peso):?>
                         Ligação <?php print $IdPeso;?>:<br>
                         Peso: <?php print $Peso;?><br>
-                        Erro: <?php print $this->Rede[$IdCamada][$IdNeuronio]['Erros'][$IdPeso];?><br><br><?php
+                        Erro: <?php print $this->Rede[$IdCamada][$IdNeuronio]->Erros[$IdPeso];?><br><br><?php
                     endforeach;?>
                   </tr>
                 </table><br><?php
@@ -172,11 +180,11 @@ class RedeNeural{
             <table>
               <tr>
                 <td>
-                  Saída: <?php print $Neuronio['Saida'];?><br><br><?php
-                  foreach($Neuronio['Pesos'] as $IdPeso => $Peso):?>
+                  Saída: <?php print $Neuronio->Saida;?><br><br><?php
+                  foreach($Neuronio->Pesos as $IdPeso => $Peso):?>
                       Ligação <?php print $IdPeso;?>:<br>
                       Peso: <?php print $Peso;?><br>
-                      Erro: <?php print $Neuronio['Erros'][$IdPeso];?><br><br><?php
+                      Erro: <?php print $Neuronio->Erros[$IdPeso];?><br><br><?php
                   endforeach;?>
                 </td>
               </tr>

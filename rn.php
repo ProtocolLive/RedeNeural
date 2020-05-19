@@ -1,5 +1,5 @@
 <?php
-//2020.05.19.05
+//2020.05.19.06
 
 class RedeNeural{
   private array $Rede = [];
@@ -60,8 +60,8 @@ class RedeNeural{
     endfor;
   }
 
-  public function Saida($Neuronio):int{
-    return $this->Rede[$this->IdCamadaSaida][$Neuronio]->Saida;
+  public function RedeShow():void{
+    var_dump($this->Rede);
   }
 
   public function PesosGet():array{
@@ -102,8 +102,8 @@ class RedeNeural{
     return true;
   }
 
-  public function RedeShow():void{
-    var_dump($this->Rede);
+  public function Saida($Neuronio):int{
+    return $this->Rede[$this->IdCamadaSaida][$Neuronio]->Saida;
   }
 
   public function CalculaErros(array $Esperado):void{

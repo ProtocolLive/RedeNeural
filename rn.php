@@ -67,19 +67,19 @@ class RedeNeural{
   public function PesosGet():array{
     $return = [];
     foreach($this->Rede as $IdCamada => $Camada):
-      foreach($Camada as $IdNeuronio => $Peso):
-        if($IdCamada > 0 and $IdCamada <= $this->QtOcultas):
-          $return[$IdCamada][$IdNeuronio] = $this->Rede[$IdCamada][$IdNeuronio]->Pesos;
-        endif;
-      endforeach;
+      if($IdCamada > 0):
+        foreach($Camada as $IdNeuronio => $Neuronio):
+          $return[$IdCamada][$IdNeuronio] = $Neuronio->Pesos;
+        endforeach;
+      endif;
     endforeach;
     return $return;
   }
 
-  public function PesosSet(array $Rede):bool{
-    foreach($Rede as $IdCamada => $Camada):
-      foreach($Camada as $IdPeso => $Peso):
-        $this->Rede[$IdCamada + 1][$IdPeso]->Pesos = $Peso;
+  public function PesosSet(array $Pesos):bool{
+    foreach($Pesos as $IdCamada => $Camada):
+      foreach($Camada as $IdNeuronio => $Neuronio):
+        $this->Rede[$IdCamada][$IdNeuronio]->Pesos = $Neuronio;
       endforeach;
     endforeach;
     return true;

@@ -1,5 +1,5 @@
 <?php
-//2020.05.19.00
+//2020.05.19.01
 
 class RedeNeural{
   private array $Rede = [];
@@ -8,7 +8,7 @@ class RedeNeural{
   private int $QtOcultas = 0;
   private int $QtNeuronioOculta = 0;
   private int $QtSaidas = 0;
-  private array $CamadaSaida;
+  private int $IdCamadaSaida;
 
   private function FactoryNeuronio(){
     return new class{
@@ -45,24 +45,23 @@ class RedeNeural{
       endfor;
     endfor;
     //Saidas
-    $CamadaSaida = $QtOcultas + 1;
+    $this->IdCamadaSaida = $QtOcultas + 1;
     for($i = 0; $i < $QtSaidas; $i++):
-      $this->Rede[$CamadaSaida][$i] = $this->FactoryNeuronio();
+      $this->Rede[$this->IdCamadaSaida][$i] = $this->FactoryNeuronio();
       if($this->QtOcultas == 0):
         $qt = $this->QtEntradas;
       else:
         $qt = $this->QtNeuronioOculta;
       endif;
       for($k = 0; $k < $qt; $k++):
-        $this->Rede[$CamadaSaida][$i]->Pesos[$k] = rand(-1000, 1000);
-        $this->Rede[$CamadaSaida][$i]->Erros[$k] = 0;
+        $this->Rede[$this->IdCamadaSaida][$i]->Pesos[$k] = rand(-1000, 1000);
+        $this->Rede[$this->IdCamadaSaida][$i]->Erros[$k] = 0;
       endfor;
     endfor;
-    $this->CamadaSaida = &$this->Rede[$CamadaSaida];
   }
 
   public function Saida($Id):int{
-    return $this->CamadaSaida[$Id]->Saida;
+    return $this->Rede[$this->IdCamadaSaida][$Id]->Saida;
   }
 
   public function PesosSet(array $Rede):bool{
@@ -109,9 +108,8 @@ class RedeNeural{
   }
 
   public function CalculaErros(array $Esperado):void{
-    $ultima = count($this->Rede) - 1;
-    for($i = $ultima; $i > 0; $i--):
-      if($i == $ultima):
+    for($i = $this->IdCamadaSaida; $i > 0; $i--):
+      if($i == $this->IdCamadaSaida):
         foreach($this->Rede[$i] as $IdNeuronio => &$Neuronio):
           $Neuronio->Erros[$IdNeuronio] = $Esperado[$IdNeuronio] - $Neuronio->Saida;
         endforeach;

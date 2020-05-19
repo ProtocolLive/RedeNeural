@@ -1,5 +1,5 @@
 <?php
-//2020.05.19.0B
+//2020.05.19.0C
 
 class RedeNeural{
   private array $Rede = [];
@@ -31,10 +31,10 @@ class RedeNeural{
   }
 
   private function ReluDx($N):int{
-    if($N < 0):
-      return 0;
-    else:
+    if($N > 0):
       return 1;
+    else:
+      return 0;
     endif;
   }
 

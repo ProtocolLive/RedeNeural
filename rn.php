@@ -110,7 +110,7 @@ class RedeNeural{
     foreach($this->Rede as $IdCamada => $Camada):
       if($IdCamada > 0):
         foreach($Camada as $IdNeuronio => $Neuronio):
-          $return[$IdCamada][$IdNeuronio] = $Neuronio->Pesos;
+          $return[$IdCamada - 1][$IdNeuronio] = $Neuronio->Pesos;
         endforeach;
       endif;
     endforeach;
@@ -120,7 +120,7 @@ class RedeNeural{
   public function PesosSet(array $Pesos):bool{
     foreach($Pesos as $IdCamada => $Camada):
       foreach($Camada as $IdNeuronio => $Neuronio):
-        $this->Rede[$IdCamada + 1][$IdNeuronio]->Pesos = $Neuronio;
+        $this->Rede[$IdCamada][$IdNeuronio]->Pesos = $Neuronio;
       endforeach;
     endforeach;
     return true;

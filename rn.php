@@ -1,5 +1,5 @@
 <?php
-//2020.05.19.06
+//2020.05.19.07
 
 class RedeNeural{
   private array $Rede = [];
@@ -128,7 +128,7 @@ class RedeNeural{
     endfor;
   }
 
-  public function DesenhaRede(){
+  public function DesenhaRede():void{
     $ultima = count($this->Rede) - 1;?>
     <style>
       table{

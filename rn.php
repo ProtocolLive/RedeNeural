@@ -1,5 +1,5 @@
 <?php
-//2020.05.19.09
+//2020.05.19.0A
 
 class RedeNeural{
   private array $Rede = [];
@@ -138,10 +138,11 @@ class RedeNeural{
             $Neuronio->Saida += $this->Rede[$IdCamada - 1][$IdNeuronio]->Saida * $Peso;
           endforeach;
           if($IdCamada == $this->IdCamadaSaida):
-            $Neuronio->Saida = $this->Ativacoes[$this->AtivacaoSaida]();
+            $funcao = $this->Ativacoes[$this->AtivacaoSaida];
           else:
-            $Neuronio->Saida = $this->Ativacoes[$this->AtivacaoOcultas]();
+            $funcao = $this->Ativacoes[$this->AtivacaoOcultas];
           endif;
+          $Neuronio->Saida = $this->$funcao($Neuronio->Saida);
         endforeach;
       endif;
     endforeach;
